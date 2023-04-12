@@ -5,14 +5,18 @@ import firebase from "../config";
 export default class CustomerCollection implements CustomerRepo {
   #converter = {
     toFirestore(customer: Customer) {
-      return { name: customer.name, age: customer.age };
+      return {
+        name: customer.name,
+        age: customer.age,
+        avatarPath: customer.avatar ? `${customer.avatar?.name}` : "",
+      };
     },
     fromFirestore(
       snapshot: firebase.firestore.QueryDocumentSnapshot,
       options: firebase.firestore.SnapshotOptions
     ): Customer {
       const data = snapshot.data(options);
-      return new Customer(data.name, data.age, snapshot.id);
+      return new Customer(data.name, data.age, data.avatar, snapshot.id);
     },
   };
 
@@ -22,6 +26,13 @@ export default class CustomerCollection implements CustomerRepo {
       return customer;
     } else {
       const docRef = await this.collection().add(customer);
+      if (customer.avatar) {
+        const storageRef = firebase.storage().ref();
+        var mountainImagesRef = storageRef.child(
+          `customers/${docRef.id}/${customer.avatar?.name}`
+        );
+        await mountainImagesRef.put(customer.avatar!);
+      }
       const doc = await docRef.get();
       return doc.data();
     }

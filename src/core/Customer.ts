@@ -2,10 +2,17 @@ export default class Customer {
   #id: string;
   #name: string;
   #age: number;
+  #avatar?: File | null;
 
-  constructor(name: string, age: number, id: string = null) {
+  constructor(
+    name: string,
+    age: number,
+    avatar: File | null = null,
+    id: string = ""
+  ) {
     this.#name = name;
     this.#age = age;
+    this.#avatar = avatar;
     this.#id = id;
   }
 
@@ -19,6 +26,10 @@ export default class Customer {
 
   get name() {
     return this.#name;
+  }
+
+  get avatar() {
+    return this.#avatar;
   }
 
   get age() {

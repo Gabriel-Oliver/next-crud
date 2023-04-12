@@ -13,16 +13,21 @@ export default function Form(props: FormProps) {
   const id = props.customer?.id;
   const [name, setName] = useState(props.customer?.name ?? "");
   const [age, setAge] = useState(props.customer?.age ?? 0);
+  const [avatar, setAvatar] = useState<File | null>();
+
   return (
     <div>
       {id && <Input text="id" value={id} readOnly className="mb-4" />}
       <Input text="Name" value={name} onChange={setName} className="mb-4" />
       <Input text="Age" type="number" value={age} onChange={setAge} />
+      <Input text="Avatar" type="file" onChange={setAvatar} />
       <div className="flex justify-end mt-7">
         <Button
           color="blue"
           className="mr-2"
-          onClick={() => props.onChangeCustomer?.(new Customer(name, age, id))}
+          onClick={() =>
+            props.onChangeCustomer?.(new Customer(name, age, avatar, id))
+          }
         >
           {id ? "Change" : "Save"}
         </Button>

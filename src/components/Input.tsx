@@ -1,7 +1,7 @@
 interface InputProps {
   text: string;
-  type?: "text" | "number";
-  value: any;
+  type?: "text" | "number" | "file";
+  value?: any;
   readOnly?: boolean;
   className?: string;
   onChange?: (value: any) => void;
@@ -19,7 +19,11 @@ export default function Input(props: InputProps) {
         px-4 py-2
         ${props.readOnly ? "" : "focus:bg-white"}
         `}
-        onChange={(e) => props.onChange?.(e.target.value)}
+        onChange={(e) =>
+          props.type === "file"
+            ? props.onChange?.(e.target?.files?.[0])
+            : props.onChange?.(e.target.value)
+        }
         type={props.type ?? "text"}
         value={props.value}
         readOnly={props.readOnly}
